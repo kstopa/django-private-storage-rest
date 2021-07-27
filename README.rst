@@ -1,27 +1,32 @@
-.. image:: https://img.shields.io/travis/edoburu/django-private-storage/master.svg?branch=master
-    :target: http://travis-ci.org/edoburu/django-private-storage
-.. image:: https://img.shields.io/pypi/v/django-private-storage.svg
-    :target: https://pypi.python.org/pypi/django-private-storage/
-.. image:: https://img.shields.io/pypi/l/django-private-storage.svg
-    :target: https://pypi.python.org/pypi/django-private-storage/
-.. image:: https://img.shields.io/codecov/c/github/edoburu/django-private-storage/master.svg
-    :target: https://codecov.io/github/edoburu/django-private-storage?branch=master
+.. image:: https://img.shields.io/travis/kstopa/django-private-storage-rest/master.svg?branch=master
+    :target: https://travis-ci.com/github/kstopa/django-private-storage-rest
+.. image:: https://img.shields.io/pypi/v/django-private-storage-rest.svg
+    :target: https://pypi.python.org/pypi/django-private-storage-rest/
+.. image:: https://img.shields.io/pypi/l/django-private-storage-rest.svg
+    :target: https://pypi.python.org/pypi/django-private-storage-rest/
+.. image:: https://img.shields.io/codecov/c/github/kstopa/django-private-storage-rest/master.svg
+    :target: https://codecov.io/github/kstopa/django-private-storage-rest?branch=master
 
-django-private-storage
-======================
+django-private-storage-rest
+===========================
 
 This module offers a private media file storage,
-so user uploads can be protected behind a login.
+so user uploads can be protected behind a login
+that can be made also with rest requests.
 
 It uses the Django storage API's internally,
 so all form rendering and admin integration work out of the box.
+
+**Note that this is just a fork** from [django-private-storage](https://github.com/edoburu/django-private-storage)
+package that only adds support for djangorestframework enabling to download files
+using rest authentication methods like token auth or JWT.
 
 Installation
 ============
 
 ::
 
-    pip install django-private-storage
+    pip install django-private-storage-rest
 
 Configuration
 -------------
@@ -318,7 +323,7 @@ We use tox to run the test suite on different versions locally (and travis-ci to
 
 To tun the test suite locally, please make sure your python environment has tox and django installed::
 
-    python3.6 -m pip install tox django
+    python3.6 -m pip install tox django djangorestframework
 
 And then simply execute tox to run the whole test matrix::
 

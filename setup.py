@@ -34,13 +34,14 @@ def find_version(*parts):
 
 
 setup(
-    name='django-private-storage',
+    name='django-private-storage-rest',
     version=find_version('private_storage', '__init__.py'),
     license='Apache 2.0',
 
     install_requires=[],
     requires=[
-        'Django (>=1.11)',
+        'Django (>=2.1)',
+        'djangorestframework (>=3.7)'
     ],
 
     description='Private media file storage for Django projects',
