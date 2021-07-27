@@ -1,13 +1,18 @@
 Changelog
 =========
 
+Changes in 3.0 (2021-07-27)
+---------------------------
+
+* Integrated with Django Rest Framework.
+
 Changes in 2.3 (2021-05-17)
 ---------------------------
 
 * Added PrivateImageField.
 * Added French locale.
 * Fixed support for django-storages > 1.10.
-* Fixed Django 4 deprecation warnings
+* Fixed Django 4 deprecation warnings.
 * Dropped Python 3 support.
 * Dropped Django 1.8/1.9/1.10/1.11 support.
 

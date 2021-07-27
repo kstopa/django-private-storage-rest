@@ -34,7 +34,7 @@ def find_version(*parts):
 
 
 setup(
-    name='django-private-storage-rest',
+    name='django-rest-private-storage',
     version=find_version('private_storage', '__init__.py'),
     license='Apache 2.0',
 
@@ -44,14 +44,14 @@ setup(
         'djangorestframework (>=3.7)'
     ],
 
-    description='Private media file storage for Django projects',
-    long_description=read('README.rst'),
+    description='Private media file storage for Django with Django Rest Framework projects',
+    long_description=read('README.md'),
 
     author='Diederik van der Boor',
     author_email='opensource@edoburu.nl',
 
-    url='https://github.com/edoburu/django-private-storage',
-    download_url='https://github.com/edoburu/django-private-storage/zipball/master',
+    url='https://github.com/kstopa/django-rest-private-storage',
+    download_url='https://github.com/kstopa/django-rest-private-storage/zipball/master',
 
     packages=find_packages(exclude=('example*',)),
     include_package_data=True,

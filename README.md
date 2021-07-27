@@ -1,13 +1,10 @@
-.. image:: https://img.shields.io/travis/kstopa/django-private-storage-rest/master.svg?branch=master
-    :target: https://travis-ci.com/github/kstopa/django-private-storage-rest
-.. image:: https://img.shields.io/pypi/v/django-private-storage-rest.svg
-    :target: https://pypi.python.org/pypi/django-private-storage-rest/
-.. image:: https://img.shields.io/pypi/l/django-private-storage-rest.svg
-    :target: https://pypi.python.org/pypi/django-private-storage-rest/
-.. image:: https://img.shields.io/codecov/c/github/kstopa/django-private-storage-rest/master.svg
-    :target: https://codecov.io/github/kstopa/django-private-storage-rest?branch=master
+[![Travis CI](https://travis-ci.com/kstopa/django-rest-private-storage.svg?branch=master)](https://travis-ci.com/github/kstopa/django-rest-private-storage)
+[![Version](https://img.shields.io/pypi/v/django-rest-private-storage.svg)](https://pypi.python.org/pypi/django-rest-private-storage/)
+[![License](https://img.shields.io/pypi/l/django-rest-private-storage.svg)]( https://pypi.python.org/pypi/django-rest-private-storage/)
+[![Codecov](https://img.shields.io/codecov/c/github/kstopa/django-rest-private-storage/master.svg)](https://codecov.io/github/kstopa/django-rest-private-storage?branch=master)
 
-django-private-storage-rest
+
+django-rest-private-storage
 ===========================
 
 This module offers a private media file storage,
@@ -26,7 +23,7 @@ Installation
 
 ::
 
-    pip install django-private-storage-rest
+    pip install django-rest-private-storage
 
 Configuration
 -------------
@@ -154,7 +151,7 @@ You can create a custom function, and use that instead.
 The function receives a ``private_storage.models.PrivateFile`` object,
 which has the following fields:
 
-* ``request``: the Django request.
+* ``request``: the Django Rest Framework [APIView](https://www.django-rest-framework.org/api-guide/views/) request.
 * ``storage``: the storage engine used to retrieve the file.
 * ``relative_name``: the file name in the storage.
 * ``full_path``: the full file system path.
