@@ -21,8 +21,6 @@ using rest authentication methods like token auth or JWT.
 Installation
 ============
 
-::
-
     pip install django-rest-private-storage
 
 Configuration
@@ -30,38 +28,39 @@ Configuration
 
 Add to the settings:
 
-.. code-block:: python
+```python
+INSTALLED_APPS += (
+    'private_storage',
+)
 
-    INSTALLED_APPS += (
-        'private_storage',
-    )
-
-    PRIVATE_STORAGE_ROOT = '/path/to/private-media/'
-    PRIVATE_STORAGE_AUTH_FUNCTION = 'private_storage.permissions.allow_staff'
+PRIVATE_STORAGE_ROOT = '/path/to/private-media/'
+PRIVATE_STORAGE_AUTH_FUNCTION = 'private_storage.permissions.allow_staff'
+```
 
 Add to ``urls.py``:
 
-.. code-block:: python
+```python
 
-    import private_storage.urls
+import private_storage.urls
 
-    urlpatterns += [
-        url('^private-media/', include(private_storage.urls)),
-    ]
+urlpatterns += [
+    url('^private-media/', include(private_storage.urls)),
+]
+```
 
 Usage
 -----
 
 In a Django model, add the ``PrivateFileField``:
 
-.. code-block:: python
+```python
+from django.db import models
+from private_storage.fields import PrivateFileField
 
-    from django.db import models
-    from private_storage.fields import PrivateFileField
-
-    class MyModel(models.Model):
-        title = models.CharField("Title", max_length=200)
-        file = PrivateFileField("File")
+class MyModel(models.Model):
+    title = models.CharField("Title", max_length=200)
+    file = PrivateFileField("File")
+```
 
 The ``PrivateFileField`` also accepts the following kwargs:
 
@@ -77,16 +76,17 @@ Images
 
 You can also use ``PrivateImageField`` which only allows you to upload images:
 
-.. code-block:: python
+```python
 
-    from django.db import models
-    from private_storage.fields import PrivateImageField
+from django.db import models
+from private_storage.fields import PrivateImageField
 
-    class MyModel(models.Model):
-        title = models.CharField("Title", max_length=200)
-        width = models.PositiveSmallIntegerField(default=0)
-        height = models.PositiveSmallIntegerField(default=0)
-        image = PrivateFileField("Image", width_field='width', height_field='height')
+class MyModel(models.Model):
+    title = models.CharField("Title", max_length=200)
+    width = models.PositiveSmallIntegerField(default=0)
+    height = models.PositiveSmallIntegerField(default=0)
+    image = PrivateFileField("Image", width_field='width', height_field='height')
+```
 
 The ``PrivateImageField`` also accepts the following kwargs on top of ``PrivateFileField``:
 
@@ -105,11 +105,11 @@ a private media folder that ``PRIVATE_STORAGE_ROOT`` points to.
 
 Define one of these settings instead:
 
-.. code-block:: python
+```python
+PRIVATE_STORAGE_CLASS = 'private_storage.storage.s3boto3.PrivateS3BotoStorage'
 
-    PRIVATE_STORAGE_CLASS = 'private_storage.storage.s3boto3.PrivateS3BotoStorage'
-
-    AWS_PRIVATE_STORAGE_BUCKET_NAME = 'private-files'  # bucket name
+AWS_PRIVATE_STORAGE_BUCKET_NAME = 'private-files'  # bucket name
+```
 
 This uses django-storages_ settings. Replace the prefix ``AWS_`` with ``AWS_PRIVATE_``.
 The following settings are reused when they don't have an corresponding ``AWS_PRIVATE_...`` setting:
@@ -128,8 +128,6 @@ This behavior can be enabled explicitly using ``PRIVATE_STORAGE_S3_REVERSE_PROXY
 
 To have encryption either configure ``AWS_PRIVATE_S3_ENCRYPTION``
 and ``AWS_PRIVATE_S3_SIGNATURE_VERSION`` or use:
-
-.. code-block:: python
 
     PRIVATE_STORAGE_CLASS = 'private_storage.storage.s3boto3.PrivateEncryptedS3BotoStorage'
 
@@ -166,22 +164,23 @@ Retrieving files by object ID
 To implement more object-based access permissions,
 create a custom view that provides the download.
 
-.. code-block:: python
+```python
 
-    from private_storage.views import PrivateStorageDetailView
+from private_storage.views import PrivateStorageDetailView
 
-    class MyDocumentDownloadView(PrivateStorageDetailView):
-        model = MyModel
-        model_file_field = 'file'
+class MyDocumentDownloadView(PrivateStorageDetailView):
+    model = MyModel
+    model_file_field = 'file'
 
-        def get_queryset(self):
-            # Make sure only certain objects can be accessed.
-            return super().get_queryset().filter(...)
+    def get_queryset(self):
+        # Make sure only certain objects can be accessed.
+        return super().get_queryset().filter(...)
 
-        def can_access_file(self, private_file):
-            # When the object can be accessed, the file may be downloaded.
-            # This overrides PRIVATE_STORAGE_AUTH_FUNCTION
-            return True
+    def can_access_file(self, private_file):
+        # When the object can be accessed, the file may be downloaded.
+        # This overrides PRIVATE_STORAGE_AUTH_FUNCTION
+        return True
+```
 
 The following class-level attributes can be overwritten:
 
@@ -212,18 +211,16 @@ A typical case would be  running Gunicorn behind an Nginx or Apache webserver.
 For such situation, the native support of the
 webserver can be enabled with the following settings:
 
-For apache
-~~~~~~~~~~
+### For apache
 
-.. code-block:: python
-
+```
     PRIVATE_STORAGE_SERVER = 'apache'
+```
 
 This requires in addition an installed and activated mod_xsendfile Apache module.
 Add the following XSendFile configurations to your conf.d config file.
 
-.. code-block:: apache
-
+```apache
     <virtualhost ...>
     ...
     WSGIScriptAlias / ...
@@ -231,30 +228,30 @@ Add the following XSendFile configurations to your conf.d config file.
     XSendFilePath ... [path to where the files are, same as PRIVATE_STORAGE_ROOT]
     ...
     </virtualhost>
+```
 
+### For Nginx
 
-For Nginx
-~~~~~~~~~
-
-.. code-block:: python
+```python
 
     PRIVATE_STORAGE_SERVER = 'nginx'
     PRIVATE_STORAGE_INTERNAL_URL = '/private-x-accel-redirect/'
+```
 
 Add the following location block in the server config:
 
-.. code-block:: nginx
+```nginx
 
     location /private-x-accel-redirect/ {
       internal;
       alias   /path/to/private-media/;
     }
+```
 
 For very old Nginx versions, you'll have to configure ``PRIVATE_STORAGE_NGINX_VERSION``,
 because Nginx versions before 1.5.9 (released in 2014) handle non-ASCII filenames differently.
 
-Other webservers
-~~~~~~~~~~~~~~~~
+### Other webservers
 
 The ``PRIVATE_STORAGE_SERVER`` may also point to a dotted Python class path.
 Implement a class with a static ``serve(private_file)`` method.
@@ -268,44 +265,42 @@ each providing files from a different ``location`` and ``base_url``.
 
 For example:
 
-.. code-block:: python
+```python
+from django.db import models
+from private_storage.fields import PrivateFileField
+from private_storage.storage.files import PrivateFileSystemStorage
 
+my_storage = PrivateFileSystemStorage(
+    location='/path/to/storage2/',
+    base_url='/private-documents2/'
+)
 
-    from django.db import models
-    from private_storage.fields import PrivateFileField
-    from private_storage.storage.files import PrivateFileSystemStorage
-
-    my_storage = PrivateFileSystemStorage(
-        location='/path/to/storage2/',
-        base_url='/private-documents2/'
-    )
-
-    class MyModel(models.Model):
-        file = PrivateFileField(storage=my_storage)
-
+class MyModel(models.Model):
+    file = PrivateFileField(storage=my_storage)
+```
 
 Then create a view to serve those files:
 
-.. code-block:: python
+```python
+from private_storage.views import PrivateStorageView
+from .models import my_storage
 
-    from private_storage.views import PrivateStorageView
-    from .models import my_storage
+class MyStorageView(PrivateStorageView):
+    storage = my_storage
 
-    class MyStorageView(PrivateStorageView):
-        storage = my_storage
-
-        def can_access_file(self, private_file):
-            # This overrides PRIVATE_STORAGE_AUTH_FUNCTION
-            return self.request.is_superuser
+    def can_access_file(self, private_file):
+        # This overrides PRIVATE_STORAGE_AUTH_FUNCTION
+        return self.request.is_superuser
+```
 
 And expose that URL:
 
-.. code-block:: python
+```python
 
     urlpatterns += [
         url('^private-documents2/(?P<path>.*)$', views.MyStorageView.as_view()),
     ]
-
+```
 
 Contributing
 ------------
@@ -314,7 +309,7 @@ This module is designed to be generic. In case there is anything you didn't like
 or think it's not flexible enough, please let us know. We'd love to improve it!
 
 Running tests
-~~~~~~~~~~~~~
+-------------
 
 We use tox to run the test suite on different versions locally (and travis-ci to automate the check for PRs).
 

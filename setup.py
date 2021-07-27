@@ -46,6 +46,7 @@ setup(
 
     description='Private media file storage for Django with Django Rest Framework projects',
     long_description=read('README.md'),
+    long_description_content_type='text/markdown',
 
     author='Diederik van der Boor',
     author_email='opensource@edoburu.nl',
